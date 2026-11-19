@@ -56,7 +56,14 @@ jobs:
         run: cargo clippy --workspace --all-targets -- -D warnings
 
       - name: cargo test
+        if: runner.os != 'Windows'
         run: cargo test --workspace
+
+      # The Tauri lib test binary cannot start on Windows without the app manifest
+      # (STATUS_ENTRYPOINT_NOT_FOUND). Its only test, bindings freshness, runs on macOS and Linux.
+      - name: cargo test (Windows, without the Tauri bridge crate)
+        if: runner.os == 'Windows'
+        run: cargo test --workspace --exclude musiverion-desktop
 
       - name: Frontend lint
         run: pnpm lint
