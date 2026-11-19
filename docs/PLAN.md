@@ -8,7 +8,7 @@ Phases and exit criteria: `ROADMAP.md`. Spec: `SPEC.md`. Tiers: Light, Medium, C
 Install the Rust toolchain if missing. Create the Cargo workspace with empty crates `mv-core`, `mv-git`, `mv-audio`, `mv-daw`, `mv-watch`, `mv-meta`, `mv-remote`, `mv-app`, `mv-cli` (each compiling, one smoke test), `apps/desktop` (Tauri v2 + React + TypeScript + Vite, one `ping` command through `mv-app` with `tauri-specta` bindings), `packages/ui` (empty shared package), pnpm workspace, `rustfmt`/`clippy -D warnings`, ESLint/Prettier, a `justfile`, dual license files, README, GitHub Actions CI (fmt, clippy, test, frontend lint/typecheck/build on macOS, Windows, Linux). Update `CLAUDE.md` commands and `filemap.md`.
 Verify: `just check` passes locally; `pnpm --filter desktop tauri build --debug` produces an app that shows the ping result.
 
-**2. Git process runner** ☐ — Careful — deps: 1
+**2. Git process runner** ☑ — Careful — deps: 1
 `mv-git`: locate git and git-lfs (bundled path, then system), run with a scrubbed environment (`GIT_TERMINAL_PROMPT=0`, fixed locale), stream stdout/stderr, cancel, time out, typed errors, parse `--porcelain=v2 -z` status, log, and LFS progress (`GIT_LFS_PROGRESS`). No shell interpolation; arguments as arrays only.
 Verify: integration tests against temp repos and a local bare remote, including paths with spaces and non-ASCII names.
 

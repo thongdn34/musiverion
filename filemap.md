@@ -21,7 +21,13 @@ Entries marked (planned) do not exist yet.
 - `reports/` — research report the plan is based on; read-only
 - `research_notes/` — notes behind the report; read-only
 - `crates/mv-core/` — domain types, traits, policies; no I/O (`AppInfo` so far)
-- `crates/mv-git/` — git/git-lfs process runner, parsers, LFS lock client, credentials (stub)
+- `crates/mv-git/` — git/git-lfs process runner and output parsers; LFS lock client and credentials (planned)
+  - `src/locate.rs` — find bundled/system `git` and `git-lfs`, parse versions
+  - `src/runner.rs` — `Invocation`: scrubbed env, capture/stream, cancel, timeout, process-group kill
+  - `src/git.rs` — `Git` handle and typed helpers (`status`, `log`, `version`)
+  - `src/status.rs`, `src/log.rs`, `src/lfs.rs` — porcelain v2 status, log and LFS progress parsers; LFS progress file tailer
+  - `src/error.rs`, `src/paths.rs` — `GitError`/`ParseError`; raw bytes to `PathBuf`
+  - `tests/` — integration tests against temp repos and local bare remotes (`common/` holds the isolated-config helper)
 - `crates/mv-audio/` — decode, metadata, hashes, peaks, loudness, null test, spectrogram (stub)
 - `crates/mv-daw/` — DAW project parsers and semantic diff; FL Studio first (stub)
 - `crates/mv-watch/` — file watcher and save detection (stub)

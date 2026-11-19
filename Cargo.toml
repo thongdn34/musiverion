@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/*", "apps/desktop/src-tauri"]
+members = ["crates/*", "apps/desktop/src-tauri", "tools/*"]
 
 [workspace.package]
 version = "0.0.1"
@@ -24,6 +24,11 @@ tauri = { version = "2.12", features = [] }
 tauri-build = { version = "2.7", features = [] }
 tauri-specta = { version = "=2.0.0-rc.29", features = ["typescript"] }
 thiserror = "2"
+tokio = { version = "1.54", default-features = false }
+tokio-util = { version = "0.7.20", default-features = false }
+tracing = { version = "0.1.44", default-features = false, features = ["std"] }
+nix = { version = "0.32", default-features = false }
+tempfile = "3.27"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"
