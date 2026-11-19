@@ -7,7 +7,8 @@ Entries marked (planned) are created by the scaffold task.
 - `docs/SPEC.md` — goals, architecture, data model, flows, MVP definition
 - `docs/ROADMAP.md` — long-term phases, exit criteria, risks
 - `docs/PLAN.md` — ordered tasks with tiers, dependencies, verification
-- `docs/design/` — approved UI mockups and design decisions
+- `docs/design/DESIGN_SYSTEM.md` — Blue Glass tokens, components, accessibility rules
+- `docs/design/mockups.html` — screen mockups the UI tasks implement
 - `docs/validation/` — (planned) results of Phase 0 experiments
 - `reports/` — research report the plan is based on; read-only
 - `research_notes/` — notes behind the report; read-only

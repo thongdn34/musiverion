@@ -27,7 +27,7 @@ Open-source desktop app (plus a phone companion) that gives a team of musicians 
 | Git | Bundled `git` + `git-lfs` binaries run as child processes (Tauri sidecars). No libgit2/gitoxide for network or LFS work |
 | Audio | Pure Rust: `symphonia` (decode WAV/FLAC/MP3/AIFF), `ebur128` (LUFS/true peak), `rustfft` (alignment, spectrograms) |
 | Desktop shell | Tauri v2 (macOS, Windows, Linux) |
-| Frontend | React + TypeScript + Vite, pnpm workspace; wavesurfer.js fed precomputed peaks |
+| Frontend | React + TypeScript + Vite, pnpm workspace; wavesurfer.js fed precomputed peaks. Visual language: Blue Glass (`docs/design/DESIGN_SYSTEM.md`) |
 | Typed bridge | `tauri-specta` generates TypeScript bindings from Rust commands and events |
 | Companion transport | `axum` HTTP + WebSocket server embedded in the desktop app, `mdns-sd` discovery, `rustls` |
 | Mobile | Stage 1: web companion served by the desktop app. Stage 2: Tauri v2 iOS/Android app reusing the same UI package |
