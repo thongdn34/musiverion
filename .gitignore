@@ -1,0 +1,25 @@
+# Rust
+target/
+**/*.rs.bk
+# Node / frontend
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+# Tauri
+apps/*/src-tauri/gen/
+apps/*/src-tauri/target/
+apps/*/src-tauri/binaries/
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+# Env / secrets
+.env
+.env.*
+!.env.example
+# Local test fixtures and caches
+/tmp/
+*.log

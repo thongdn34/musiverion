@@ -1,0 +1,124 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+  .mv *{box-sizing:border-box}
+  .mv{font-family:var(--font-sans);color:var(--foreground);font-size:12px;line-height:1.35}
+  .mv h4{margin:18px 0 8px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-foreground)}
+  .mv h4:first-child{margin-top:0}
+  .win{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);overflow:hidden}
+  .bar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--border)}
+  .bar .t{font-weight:600;font-size:13px}
+  .sp{flex:1}
+  .btn{border:1px solid var(--border);border-radius:6px;padding:4px 9px;background:var(--secondary);color:var(--secondary-foreground);white-space:nowrap}
+  .btn.p{background:var(--primary);color:var(--primary-foreground);border-color:transparent}
+  .chip{display:inline-block;border-radius:99px;padding:1px 7px;font-size:10.5px;border:1px solid var(--border);white-space:nowrap}
+  .chip.ok{background:var(--success);color:var(--success-foreground);border-color:transparent}
+  .chip.warn{background:var(--warning-surface);color:var(--warning-foreground,var(--foreground))}
+  .chip.me{background:var(--accent-surface);}
+  .cols{display:grid;grid-template-columns:138px 214px 1fr}
+  .col{padding:10px;border-right:1px solid var(--border);min-width:0}
+  .col:last-child{border-right:0}
+  .lab{font-size:10.5px;color:var(--muted-foreground);text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px}
+  .item{padding:5px 6px;border-radius:6px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .item.sel{background:var(--secondary)}
+  .mut{color:var(--muted-foreground)}
+  .ver{padding:7px 6px;border-radius:6px;margin-bottom:3px;border-left:2px solid var(--border)}
+  .ver.sel{background:var(--secondary);border-left-color:var(--primary)}
+  .ver b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ver span{font-size:10.5px}
+  .wave{position:relative;height:46px;border:1px solid var(--border);border-radius:6px;background:var(--background);overflow:hidden;margin-bottom:4px}
+  .wave svg{position:absolute;inset:0;width:100%;height:100%}
+  .reg{position:absolute;top:0;bottom:0;background:var(--warning);opacity:.28}
+  .row{display:flex;align-items:center;gap:6px;margin:6px 0}
+  .facts{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin:8px 0}
+  .facts div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--border);padding:2px 0}
+  .chg{font-family:var(--font-mono);font-size:11px;background:var(--code-background);border-radius:6px;padding:7px 8px;white-space:pre;overflow:hidden}
+  .foot{display:flex;align-items:center;gap:8px;padding:7px 10px;border-top:1px solid var(--border);font-size:11px}
+  .phones{display:flex;gap:16px;flex-wrap:wrap}
+  .ph{width:228px;border:1px solid var(--border);border-radius:22px;background:var(--card);padding:12px 12px 8px}
+  .ph .hd{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+  .ph .hd b{font-size:13px}
+  .big{display:block;text-align:center;padding:9px;border-radius:9px;margin:6px 0;font-weight:600}
+  .card{border:1px solid var(--border);border-radius:9px;padding:8px;margin:6px 0}
+  .tabs{display:flex;justify-content:space-around;border-top:1px solid var(--border);margin-top:10px;padding-top:7px;font-size:10.5px;color:var(--muted-foreground)}
+  .tabs .on{color:var(--foreground);font-weight:600}
+  .ab{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .ab .btn{text-align:center;padding:10px 4px}
+</style>
+<div class="mv">
+  <h4>Desktop — project view</h4>
+  <div class="win">
+    <div class="bar">
+      <span class="t">Night Drive EP</span><span class="chip">FL Studio</span>
+      <span class="chip warn">2 unsaved changes</span>
+      <span class="sp"></span>
+      <span class="btn">Get latest</span><span class="btn">Save version</span><span class="btn p">Publish</span>
+    </div>
+    <div class="cols">
+      <div class="col">
+        <p class="lab">Songs</p>
+        <div class="item sel">01 Night Drive</div>
+        <div class="item">02 Low Tide</div>
+        <div class="item mut">03 Neon (not downloaded)</div>
+        <p class="lab" style="margin-top:12px">Checked out</p>
+        <div class="item"><span class="chip me">You</span> Night Drive.flp</div>
+        <div class="item"><span class="chip">Mai</span> Low Tide.flp</div>
+        <p class="lab" style="margin-top:12px">Team</p>
+        <div class="item mut">Mai · An · You</div>
+      </div>
+      <div class="col">
+        <p class="lab">Versions</p>
+        <div class="ver sel"><b>Brighter chorus, new bass take</b><span class="mut">You · today 14:20</span></div>
+        <div class="ver"><b>Mix v3 <span class="chip ok">Approved</span></b><span class="mut">Mai · yesterday</span></div>
+        <div class="ver"><b>Vocal comp, verse 2</b><span class="mut">An · Mon</span></div>
+        <div class="ver"><b>Mix v2 <span class="chip">Milestone</span></b><span class="mut">Mai · 12 Nov</span></div>
+        <div class="ver"><b>Arrangement locked</b><span class="mut">You · 10 Nov</span></div>
+        <div class="mut" style="padding:4px 6px">Alt version: “Half-time drop” (An)</div>
+      </div>
+      <div class="col">
+        <p class="lab">Compare · Bounces/Night Drive mix.wav</p>
+        <div class="row"><span class="chip">A · Mix v3</span><span class="mut">vs</span><span class="chip me">B · this version</span><span class="sp"></span><span class="btn">▶ A</span><span class="btn p">▶ B</span></div>
+        <div class="wave"><div class="reg" style="left:31%;width:17%"></div><div class="reg" style="left:68%;width:9%"></div>
+          <svg viewBox="0 0 300 46" preserveAspectRatio="none"><path d="M0 23 L6 14 12 30 18 10 24 34 30 16 36 29 42 8 48 36 54 13 60 31 66 18 72 28 78 9 84 37 90 12 96 33 102 6 108 40 114 9 120 36 126 7 132 39 138 11 144 34 150 16 156 30 162 12 168 33 174 15 180 31 186 13 192 32 198 17 204 28 210 8 216 38 222 10 228 35 234 14 240 31 246 18 252 28 258 15 264 30 270 19 276 27 282 20 288 26 294 22 300 23" fill="none" stroke="var(--chart-1)" stroke-width="1.2"/></svg></div>
+        <div class="mut" style="font-size:10.5px">Highlighted: audio differs (1:02–1:36, 2:16–2:34) · playback loudness-matched</div>
+        <div class="facts">
+          <div><span class="mut">Loudness</span><span>−14.8 → −13.9 LUFS</span></div>
+          <div><span class="mut">True peak</span><span>−1.2 → −1.0 dB</span></div>
+          <div><span class="mut">Length</span><span>3:42 (same)</span></div>
+          <div><span class="mut">Format</span><span>48 kHz / 24-bit</span></div>
+        </div>
+        <p class="lab">Project changes · Night Drive.flp</p>
+        <div class="chg">~ Channel 'Bass'  sample take_07 → take_09
+~ Mixer 'Chorus Bus'  EQ band 4  +2.5 dB
++ Pattern 'Chorus lead 2'
+~ Plugin 'Serum' on 'Lead'  settings changed</div>
+        <div class="row"><span class="btn">Restore this version</span><span class="btn">Mark as milestone</span><span class="btn">Comment</span></div>
+      </div>
+    </div>
+    <div class="foot"><span class="chip ok">Connected</span><span class="mut">forgejo.studio.example · 41.2 GB used</span><span class="sp"></span><span class="mut">Phone paired: An’s iPhone</span></div>
+  </div>
+
+  <h4>Phone companion — status and compare</h4>
+  <div class="phones">
+    <div class="ph">
+      <div class="hd"><b>Night Drive EP</b><span class="sp"></span><span class="chip ok">Paired</span></div>
+      <div class="card"><b>01 Night Drive</b><div class="mut">2 unsaved changes · checked out by you</div></div>
+      <span class="big btn">Save version</span>
+      <span class="big btn p">Publish</span>
+      <div class="card"><p class="lab">Checked out</p><div>Night Drive.flp · You <span class="mut">release</span></div><div>Low Tide.flp · Mai</div></div>
+      <div class="card"><p class="lab">Latest</p><div>Brighter chorus, new bass take</div><div class="mut">You · 14:20</div></div>
+      <div class="tabs"><span class="on">Status</span><span>Versions</span><span>Listen</span><span>Comments</span></div>
+    </div>
+    <div class="ph">
+      <div class="hd"><b>Listen</b><span class="sp"></span><span class="mut">mix.wav</span></div>
+      <div class="wave"><div class="reg" style="left:31%;width:17%"></div><div class="reg" style="left:68%;width:9%"></div>
+        <svg viewBox="0 0 300 46" preserveAspectRatio="none"><path d="M0 23 L10 12 20 33 30 9 40 36 50 14 60 31 70 10 80 37 90 8 100 39 110 9 120 36 130 7 140 38 150 14 160 31 170 12 180 33 190 15 200 30 210 9 220 37 230 12 240 32 250 17 260 29 270 19 280 27 290 21 300 23" fill="none" stroke="var(--chart-1)" stroke-width="1.2"/></svg></div>
+      <div class="mut" style="font-size:10.5px;margin-bottom:8px">1:14 / 3:42 · loudness-matched</div>
+      <div class="ab"><span class="btn">A · Mix v3</span><span class="btn p">B · Today</span></div>
+      <div class="card"><p class="lab">Comment at 1:14</p><div class="mut">Bass feels louder here — keep?</div></div>
+      <span class="big btn">Add comment</span>
+      <span class="big btn p">Approve this version</span>
+      <div class="tabs"><span>Status</span><span>Versions</span><span class="on">Listen</span><span>Comments</span></div>
+    </div>
+  </div>
+</div>
