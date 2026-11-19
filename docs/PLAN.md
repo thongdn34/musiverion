@@ -16,7 +16,7 @@ Verify: integration tests against temp repos and a local bare remote, including 
 Scripted experiments, results in `docs/validation/hosts.md`: lock API on Forgejo (local container), GitHub, GitLab; `lfs.locksverify` blocking; `lockable` read-only behaviour on each OS; textconv receiving pointer vs audio; skip-smudge clone plus `fetchinclude` per folder. State what in SPEC must change.
 Verify: the scripts are in `tools/validation/` and re-runnable.
 
-**4. Validation: DAW save behaviour** ☐ — Heavy — deps: 1
+**4. Validation: DAW save behaviour** ☑ tool and protocol built (`tools/fsprobe`, `docs/validation/RUN_FL_STUDIO.md`); FL Studio results pending a human run — Heavy — deps: 1
 A small watcher probe tool that logs filesystem events with sizes and timestamps, plus a written test protocol a human runs in FL Studio (first), Ableton, Reaper, Logic: save, save-as, autosave, backup files, read-only project file, file handles held open. Results template in `docs/validation/daws.md`. The worker builds the tool and protocol; a human with the DAWs fills in results.
 Verify: probe tool runs on macOS and Windows and records rename-based saves correctly in an automated test.
 

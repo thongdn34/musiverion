@@ -17,7 +17,9 @@ Entries marked (planned) do not exist yet.
 - `docs/PLAN.md` — ordered tasks with tiers, dependencies, verification
 - `docs/design/DESIGN_SYSTEM.md` — Blue Glass tokens, components, accessibility rules
 - `docs/design/mockups.html` — screen mockups the UI tasks implement
-- `docs/validation/` — (planned) results of Phase 0 experiments
+- `docs/validation/` — results of Phase 0 experiments
+  - `RUN_FL_STUDIO.md` — guide for the musician running the FL Studio fsprobe session
+  - `daws.md` — DAW save-behaviour results template (FL Studio; Ableton, Reaper, Logic placeholders)
 - `reports/` — research report the plan is based on; read-only
 - `research_notes/` — notes behind the report; read-only
 - `crates/mv-core/` — domain types, traits, policies; no I/O (`AppInfo` so far)
@@ -41,3 +43,11 @@ Entries marked (planned) do not exist yet.
 - `apps/mobile/` — (planned, Phase 4) Tauri v2 iOS/Android companion
 - `packages/ui/` — React components shared by desktop and companion (`@musiverion/ui`): `src/tokens.css` design tokens, `GlassPanel`
 - `tools/validation/` — (planned) re-runnable Phase 0 experiment scripts
+- `tools/fsprobe/` — `fsprobe` binary: guided DAW save-behaviour sessions (`run`), `report`, `check`
+  - `src/recorder.rs` — `notify` watcher, settle polling, ordered `trace.jsonl` writer
+  - `src/classify.rs` — pure per-file classification of a step window (temp+rename, in place, delete+create, ...)
+  - `src/session.rs`, `src/actions.rs`, `src/console.rs` — guided steps, resume state (`answers.json`), helper actions, stdin prompts
+  - `src/protocol.rs`, `src/trace.rs`, `src/report.rs`, `src/environment.rs`, `src/paths.rs`, `src/error.rs` — protocol schema, trace records, `summary.md`, `environment.json`, path/glob helpers, errors
+  - `protocols/` — protocols as data (`fl-studio.toml`); `README.md` documents the schema
+  - `tests/` — real-filesystem recorder tests and a scripted end-to-end run with resume
+- `validation-results/` — (gitignored) local fsprobe results folders and their `-backups` siblings

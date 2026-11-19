@@ -23,3 +23,5 @@ Thumbs.db
 # Local test fixtures and caches
 /tmp/
 *.log
+# fsprobe results and safety copies (local paths; sent back by hand)
+validation-results/

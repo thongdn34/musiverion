@@ -1,0 +1,31 @@
+[package]
+name = "fsprobe"
+description = "Musiverion Phase 0 tool: records how a DAW saves files, guided by a protocol"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "fsprobe"
+path = "src/main.rs"
+
+[lib]
+name = "fsprobe"
+path = "src/lib.rs"
+
+[dependencies]
+chrono = { version = "0.4.45", default-features = false, features = ["clock", "std"] }
+clap = { version = "4.6", features = ["derive"] }
+notify = "8.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+toml = "1.2"
+
+[dev-dependencies]
+tempfile = "3.27"
+
+[lints]
+workspace = true

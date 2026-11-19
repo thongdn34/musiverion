@@ -1,0 +1,770 @@
+# FL Studio save-behaviour protocol for fsprobe (schema: see README.md).
+#
+# Menu names and folders were checked against Image-Line's online manual for
+# FL Studio 2026 (https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/).
+# Anything that could not be confirmed there is marked "(check)" in the text
+# the musician sees, so they can report the real name.
+
+schema = 1
+id = "fl-studio"
+title = "How FL Studio saves files"
+daw = "FL Studio"
+revision = "1"
+
+intro = """
+Thank you for helping! This session shows how FL Studio saves, backs up and
+protects its files, so that Musiverion can version your projects safely.
+
+You will do ordinary things in FL Studio (save, render, record, quit) while
+this tool writes down which files appear, change or disappear. Each step
+tells you exactly what to do. Keep this window next to FL Studio.
+
+It takes about 60 to 90 minutes, including a few waits. You can stop at any
+time and continue later. If a step is impossible, type skip; that is a
+useful result too.
+
+When the tool shows "(check)" next to a menu name, the name could not be
+confirmed. If yours is different, please mention it in the step's answers."""
+
+outro = """
+That was the last step. Thank you very much!"""
+
+[settings]
+quiet_ms = 3000
+max_wait_ms = 180000
+ignore = [".DS_Store", "._*", "Thumbs.db", "desktop.ini", ".localized"]
+
+[[watch]]
+id = "test"
+label = "Test folder"
+explain = """
+An empty folder used only for this test. The tool can create it for you,
+together with the subfolders Project, Audio and Bounces.
+Please do not pick a folder that iCloud Drive, OneDrive or Dropbox syncs
+(sync apps add their own file activity and can lock files)."""
+suggest = "~/Music/musiverion-test/Song A"
+create = true
+subfolders = ["Project", "Audio", "Bounces"]
+expect_empty = true
+
+[[watch]]
+id = "fl_data"
+label = "FL Studio data folder"
+explain = """
+FL Studio keeps backups, autosaves and recordings in its "User data folder".
+By default that is the Image-Line folder inside your Documents folder (FL
+Studio puts an "FL Studio" folder in it). The tool watches that too.
+
+To check where yours is: in FL Studio open Options > File settings and look
+at "User data folder". If you have not started FL Studio yet, start it
+once now so the folder exists, then come back here.
+On Windows, if your Documents folder is moved to OneDrive, the folder may be
+inside OneDrive instead."""
+suggest = "~/Documents/Image-Line"
+optional = true
+
+[targets.project]
+label = "the test project file (Song A.flp)"
+pattern = "Project/*.flp"
+root = "test"
+prefer = "Song A.flp"
+
+[targets.demo_song]
+label = "an FL Studio demo song (an .flp file that came with FL Studio)"
+search = [
+  "/Applications/FL Studio*.app/Contents/Resources/FL/Data/Projects/Demo songs/*.flp",
+  "/Applications/FL Studio*.app/Contents/Resources/FL/Data/Projects/Demo songs/*/*.flp",
+  "C:/Program Files/Image-Line/FL Studio*/Data/Projects/Demo songs/*.flp",
+  "C:/Program Files/Image-Line/FL Studio*/Data/Projects/Demo songs/*/*.flp",
+]
+
+# ------------------------------------------------------------------ step 0
+
+[[steps]]
+id = "s00"
+number = "0"
+title = "About your FL Studio"
+user_action = false
+purpose = "Version, edition and backup settings decide where FL writes backups and what the results mean (SPEC 10.1)."
+text = """
+First, a few questions about your FL Studio. Open FL Studio now if it is
+not open yet, and wait until it has finished starting."""
+
+[[steps.questions]]
+id = "version"
+ask = "Which FL Studio version is it? In FL Studio open Help > About (check) and type the version exactly as shown (for example 2026.1.2 build 1234)."
+type = "text"
+env = "version"
+
+[[steps.questions]]
+id = "trial"
+ask = "Is this the free trial, i.e. FL Studio is NOT unlocked with an Image-Line account?"
+type = "yes_no"
+env = "trial"
+
+[[steps.questions]]
+id = "edition"
+ask = "Which edition is it? (Help > About shows it too (check).)"
+type = "choice"
+options = ["Fruity", "Producer", "Signature", "All Plugins Edition", "Trial / not unlocked", "Not sure"]
+other = true
+env = "edition"
+
+[[steps.questions]]
+id = "autosave"
+ask = "Open Options > File settings (or press F10 and click the File icon). In the \"Backup (Autosave)\" section, what is \"Autosave\" set to right now?"
+type = "choice"
+options = [
+  "Never (just remind every 10 min)",
+  "Rarely (every 15 minutes)",
+  "Occasionally (every 10 minutes)",
+  "Regularly (every 5 minutes)",
+  "Frequently (every 5 minutes & before risky operations)",
+  "Very frequently (every minute & before risky operations)",
+]
+other = true
+env = "autosave_setting"
+
+[[steps.questions]]
+id = "backup_location"
+ask = "In the same section, what is \"Location\" set to?"
+type = "choice"
+options = ["Always save to the global folder", "Save to the project data folder if there is one"]
+other = true
+env = "backup_location"
+
+[[steps.questions]]
+id = "backup_max"
+ask = "In the same section, what number does \"Maximum\" show?"
+type = "text"
+env = "backup_maximum"
+
+[[steps.questions]]
+id = "user_data"
+ask = "Still in File settings: what does \"User data folder\" show? Type it exactly."
+type = "text"
+env = "user_data_folder"
+
+[[steps.questions]]
+id = "documents_sync"
+ask = "Is your Documents folder synced by a cloud service?"
+type = "choice"
+options = ["No", "iCloud Drive (Desktop & Documents)", "OneDrive", "Dropbox", "Not sure"]
+other = true
+env = "documents_sync"
+
+# ------------------------------------------------------------------ step 1
+
+[[steps]]
+id = "s01"
+number = "1"
+title = "Make a new project and save it"
+purpose = "The very first save of a project: which pattern (in place, temporary file, delete and create), and which extra files or folders FL creates. Basis for save detection (SPEC 7.2) and the FL template."
+text = """
+In FL Studio:
+ 1. File > New.
+ 2. From the Browser on the left, drag any sample (for example from Packs)
+    onto an empty space in the Channel rack. This adds a Sampler channel.
+ 3. Click a few step buttons in the Channel rack so the pattern plays something.
+ 4. Save: File > Save as ({mod}+Shift+S). Go to the test folder
+    {watch.test}
+    open its Project folder, type the name  Song A  and save.
+
+If FL Studio first shows a "project folder" window, click Skip so you get
+the normal save window, and remember what the window offered."""
+after = [{ action = "snapshot_tree" }]
+
+[[steps.questions]]
+id = "folder_dialog"
+ask = "Did FL Studio show a \"project folder\" window before the normal save window?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "folder_dialog_text"
+ask = "What did that window offer (button names, suggested folders)?"
+type = "text"
+when = { folder_dialog = "yes" }
+
+[[steps.questions]]
+id = "notes"
+ask = "Anything else you noticed while saving?"
+type = "text"
+
+# ------------------------------------------------------------------ step 2
+
+[[steps]]
+id = "s02"
+number = "2"
+title = "Save small changes three times"
+purpose = "Ordinary saves: pattern, settle time, and whether every manual save also writes a backup (the manual says backups are made on every save from 'Rarely' up)."
+text = """
+ 1. Turn the volume knob of your Sampler channel a little.
+ 2. Save with File > Save ({mod}+S).
+ 3. Wait about 10 seconds.
+Do this three times in total, then press Enter here."""
+
+[[steps.questions]]
+id = "dialog"
+ask = "Did FL Studio show any window or message when you saved?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "dialog_text"
+ask = "What did it show?"
+type = "text"
+when = { dialog = "yes" }
+
+# ------------------------------------------------------------------ step 3
+
+[[steps]]
+id = "s03"
+number = "3"
+title = "Save new version"
+purpose = "How FL names version copies (manual: MyProj becomes MyProj_2) - a new project file the app must notice and lock."
+text = """
+In FL Studio choose File > Save new version ({mod}+N)."""
+
+[[steps.questions]]
+id = "name"
+ask = "Which project name does FL Studio show now (in its title bar, or File > Recent projects)?"
+type = "text"
+
+# ------------------------------------------------------------------ step 4
+
+[[steps]]
+id = "s04"
+number = "4"
+title = "Save as a new name"
+purpose = "Save as into the same folder: a new file; does FL touch the old one?"
+text = """
+In FL Studio choose File > Save as ({mod}+Shift+S). Stay in the same
+Project folder, type the name  Song A alt  and save.
+(From now on FL Studio has "Song A alt" open. That is fine.)"""
+
+[[steps.questions]]
+id = "notes"
+ask = "Anything unusual?"
+type = "text"
+
+# ------------------------------------------------------------------ step 5
+
+[[steps]]
+id = "s05"
+number = "5"
+title = "Autosave and backups"
+purpose = "Where autosave and backup files land and how they are named: decides the ignore rules in the FL template and whether backups appear next to the project."
+text = """
+ 1. In FL Studio open Options > File settings and set "Autosave" to the most
+    frequent choice: "Very frequently (every minute & before risky
+    operations)". Close the settings window. (You can set it back at the end.)
+ 2. Move a knob (a change you do not save).
+ 3. Press Play (Space bar), let it play for a few seconds, then Stop.
+ 4. Do not save. Press Enter here.
+The tool then waits 3 minutes while FL Studio autosaves. Leave FL Studio
+open and do not touch it during the wait."""
+after = [
+  { action = "wait", seconds = 180, message = "FL Studio should now autosave about once a minute." },
+  { action = "snapshot_tree" },
+]
+
+[[steps.questions]]
+id = "noticed"
+ask = "Did FL Studio show anything during the wait (a message, a hint, a change in the title bar)?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "noticed_text"
+ask = "What did it show?"
+type = "text"
+when = { noticed = "yes" }
+
+# ------------------------------------------------------------------ step 6
+
+[[steps]]
+id = "s06"
+number = "6"
+title = "Record about 10 seconds of audio"
+purpose = "Where recorded takes land (inside the project folder or the FL data folder's Audio/Recorded): decides the layout rule for Audio/Recordings and the portability lint."
+text = """
+Record about 10 seconds of sound into the project:
+ 1. Options > Audio settings: make sure an input is available. On a Mac the
+    built-in microphone is fine; if macOS asks for microphone access, allow it.
+ 2. Open the Mixer (F9) and click insert track 1. Choose your input in the
+    Mixer's audio input menu (check).
+ 3. Arm the track for recording (the small record button on the track) (check).
+ 4. Press the Record button in the toolbar (R), then Play (Space). If FL
+    asks what to record, choose audio into the playlist (check).
+ 5. Make some sound for about 10 seconds, then Stop (Space).
+Do not save the project yet.
+If you have no way to record at all, type skip."""
+
+[[steps.questions]]
+id = "worked"
+ask = "Did the recording work (you can see a new audio clip)?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "notes"
+ask = "If FL showed where it saves the recording, or asked anything, describe it:"
+type = "text"
+
+# ------------------------------------------------------------------ step 7
+
+[[steps]]
+id = "s07a"
+number = "7a"
+title = "Use a sound from outside the test folder"
+purpose = "Media referenced from outside the project: does FL copy it in on save? (portability lint, SPEC 7.3)"
+text = """
+ 1. Take any .wav file that is NOT in the test folder - for example the
+    recording from step 6 (in the FL Studio data folder under
+    FL Studio/Audio/Recorded), or any sound file you have.
+    Copy it to your Desktop and rename the copy to  outside-sample.wav
+ 2. Drag outside-sample.wav from the Desktop into FL Studio's Playlist
+    (the big arrangement window).
+ 3. Save ({mod}+S)."""
+
+[[steps.questions]]
+id = "notes"
+ask = "Anything unusual?"
+type = "text"
+
+[[steps]]
+id = "s07b"
+number = "7b"
+title = "Export the project data files"
+purpose = "Whether FL's own 'collect files' export can gather all media into the project layout."
+text = """
+In FL Studio choose File > Export > Project data files. When it asks for a
+folder, choose the Audio folder inside the test folder:
+    {watch.test}/Audio"""
+
+[[steps.questions]]
+id = "asked"
+ask = "Did FL ask you anything (for example which files to include)? Describe it, or type no."
+type = "text"
+
+[[steps]]
+id = "s07c"
+number = "7c"
+title = "Export a zipped loop package"
+purpose = "What a zipped loop package contains: a possible self-contained hand-off format."
+text = """
+In FL Studio choose File > Export > Zipped loop package. Save it into the
+test folder's Bounces folder with the name  Song A package"""
+
+[[steps.questions]]
+id = "notes"
+ask = "Anything unusual?"
+type = "text"
+
+[[steps]]
+id = "s07d"
+number = "7d"
+title = "Rename the outside sound and reopen the project"
+purpose = "Does the saved project still depend on the outside file (missing-sample behaviour)? Tells the portability lint what to look for."
+unless = { "s00.trial" = "yes" }
+text = """
+ 1. On your Desktop, rename outside-sample.wav to  outside-sample-moved.wav
+ 2. In FL Studio open the project again: File > Open ({mod}+O) and choose
+    Project/Song A alt.flp (the project you saved in step 7a).
+    If FL asks whether to save changes first, choose No (check).
+ 3. Watch what FL Studio says while the project opens.
+Afterwards you can rename the file back."""
+
+[[steps.questions]]
+id = "missing"
+ask = "Did FL Studio say that a sample is missing?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "missing_text"
+ask = "What did the window say, and which buttons did it offer? (The manual calls it the Missing samples window (check).)"
+type = "text"
+when = { missing = "yes" }
+
+[[steps.questions]]
+id = "still_plays"
+ask = "Does the outside sound still play in the project?"
+type = "yes_no"
+
+# ------------------------------------------------------------------ step 8
+
+[[steps]]
+id = "s08a"
+number = "8a"
+title = "Export the song as a WAV file"
+purpose = "How a render writes its WAV (temporary file? grows in place?) and how long until it settles: the watcher must never version a half-written bounce."
+text = """
+ 1. In FL Studio choose File > Export > Wave file ({mod}+R).
+ 2. Save into the test folder's Bounces folder with the name  Song A mix
+ 3. In the export window set "WAV bit depth" to 24Bit int (check).
+ 4. Click Start and wait until the render has finished."""
+
+[[steps.questions]]
+id = "notes"
+ask = "Anything unusual?"
+type = "text"
+
+[[steps]]
+id = "s08b"
+number = "8b"
+title = "Export the same WAV again (overwrite)"
+purpose = "Overwriting a bounce: rewritten in place or replaced? Decides whether the app sees 'changed file' or 'deleted + new file'."
+text = """
+Do the same again: File > Export > Wave file ({mod}+R), same Bounces folder,
+same name  Song A mix  . If FL asks whether to replace the existing file,
+say yes (check). Then click Start and wait until it has finished."""
+
+[[steps.questions]]
+id = "asked_replace"
+ask = "Did FL ask before replacing the existing file?"
+type = "yes_no"
+
+# ------------------------------------------------------------------ step 9
+
+[[steps]]
+id = "s09a"
+number = "9a"
+title = "Which files FL keeps open (idle)"
+purpose = "Does FL hold the project or audio files open? Decides whether 'Get latest' must ask the user to close the project first."
+user_action = false
+text = """
+Leave your project open in FL Studio with nothing playing. The tool now
+checks which files FL Studio keeps open."""
+after = [{ action = "list_open_handles" }]
+
+[[steps]]
+id = "s09b"
+number = "9b"
+title = "Which files FL keeps open (playing)"
+purpose = "Same check while playing: are audio files held open during playback?"
+text = """
+Now press Play in FL Studio (Space bar) and let it play."""
+start_prompt = "When FL Studio is playing, press Enter here."
+before = [{ action = "list_open_handles" }]
+done_prompt = "Stop playback in FL Studio, then press Enter."
+
+# ------------------------------------------------------------------ step 10
+
+[[steps]]
+id = "s10a"
+number = "10a"
+title = "Close the project"
+purpose = "Preparation for the read-only tests."
+text = """
+In FL Studio choose File > New, so that no project is open.
+If FL asks whether to save changes, choose Yes."""
+
+[[steps]]
+id = "s10t"
+number = "10t"
+title = "Trial only: use a demo song as the test project"
+purpose = "The FL Studio trial cannot reopen projects it saved. A copy of a demo song that came with FL Studio is used instead."
+user_action = false
+when = { "s00.trial" = "yes" }
+text = """
+The FL Studio trial cannot reopen projects that it saved itself, but it can
+open the demo songs that come with FL Studio. The tool now copies a demo
+song into the test folder as Project/Song A.flp, replacing your own Song A.
+If the tool cannot find a demo song, you can drag one in: in Finder or
+Explorer look inside the FL Studio program folder for "Demo songs" (check)."""
+after = [{ action = "copy_in", target = "demo_song", to = "Project/Song A.flp", root = "test" }]
+
+[[steps]]
+id = "s10b"
+number = "10b"
+title = "Open a read-only project and save"
+purpose = "SPEC 10.1: how FL behaves when the project file is read-only before it is opened. Git LFS keeps 'lockable' files read-only until someone checks them out."
+text = """
+When you press Enter, the tool makes Song A.flp read-only - the way the app
+will protect a project nobody has checked out. Then, in FL Studio:
+ 1. File > Open ({mod}+O) and open  Project/Song A.flp
+    Watch for any warning while it opens.
+ 2. Move a knob.
+ 3. Save ({mod}+S).
+Note exactly what happens: an error message (please copy its text), a
+"Save as" window, or nothing visible at all."""
+before = [
+  { action = "set_readonly", target = "project" },
+  { action = "backup_file", target = "project", slot = "readonly_closed" },
+]
+after = [
+  { action = "compare_with_backup", slot = "readonly_closed" },
+  { action = "stat_file", target = "project" },
+]
+
+[[steps.questions]]
+id = "open_warning"
+ask = "Did FL Studio warn about anything when it opened the project?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "open_warning_text"
+ask = "What did the warning say?"
+type = "text"
+when = { open_warning = "yes" }
+
+[[steps.questions]]
+id = "save_result"
+ask = "What happened when you saved?"
+type = "choice"
+options = ["An error message", "A Save as window opened", "Nothing visible - it seemed to save", "Something else"]
+
+[[steps.questions]]
+id = "save_text"
+ask = "Please describe exactly what happened. If there was a message, copy its text as exactly as you can."
+type = "text"
+
+[[steps.questions]]
+id = "save_as_action"
+ask = "If a Save as window opened: what did you do (cancel, or save under another name)?"
+type = "text"
+when = { save_result = "A Save as window opened" }
+
+# ------------------------------------------------------------------ step 11
+
+[[steps]]
+id = "s11a"
+number = "11a"
+title = "Close the project again"
+purpose = "Preparation: the next test starts with a writable file."
+text = """
+In FL Studio choose File > New. If FL asks whether to save changes, choose No.
+When you press Enter at the end, the tool makes Song A.flp writable again."""
+after = [{ action = "clear_readonly", target = "project" }]
+
+[[steps]]
+id = "s11t"
+number = "11t"
+title = "Trial only: fresh copy of the demo song"
+purpose = "The trial cannot reopen the copy it may have just saved, so a fresh copy is used."
+user_action = false
+when = { "s00.trial" = "yes" }
+text = """
+The tool copies the demo song in again, so the trial can open it."""
+after = [{ action = "copy_in", target = "demo_song", to = "Project/Song A.flp", root = "test" }]
+
+[[steps]]
+id = "s11b"
+number = "11b"
+title = "Open the project"
+purpose = "Preparation: the project is open while the file becomes read-only."
+text = """
+In FL Studio open  Project/Song A.flp  (File > Open, {mod}+O).
+When it is open, press Enter. The tool then makes the file read-only while
+FL Studio has it open - as if someone else had checked it out meanwhile."""
+after = [
+  { action = "set_readonly", target = "project" },
+  { action = "backup_file", target = "project", slot = "readonly_open" },
+]
+
+[[steps]]
+id = "s11c"
+number = "11c"
+title = "Save while the file is read-only"
+purpose = "SPEC 10.1: what FL does when the file becomes read-only while it is open, then the user saves."
+text = """
+In FL Studio move a knob and save ({mod}+S).
+Note exactly what happens: an error message (please copy its text), a
+"Save as" window, or nothing visible at all."""
+after = [
+  { action = "compare_with_backup", slot = "readonly_open" },
+  { action = "stat_file", target = "project" },
+]
+
+[[steps.questions]]
+id = "save_result"
+ask = "What happened when you saved?"
+type = "choice"
+options = ["An error message", "A Save as window opened", "Nothing visible - it seemed to save", "Something else"]
+
+[[steps.questions]]
+id = "save_text"
+ask = "Please describe exactly what happened. If there was a message, copy its text as exactly as you can."
+type = "text"
+
+[[steps]]
+id = "s11d"
+number = "11d"
+title = "Let autosave run against the read-only file"
+purpose = "Does a failing autosave show an error, write elsewhere, or silently drop the backup?"
+text = """
+In FL Studio move another knob, but do NOT save. Press Enter here; the tool
+then waits 2.5 minutes so FL Studio's autosave (every minute since step 5)
+can run. Leave FL Studio alone during the wait, but watch it for messages."""
+after = [{ action = "wait", seconds = 150, message = "Watch FL Studio for any message while autosave runs." }]
+
+[[steps.questions]]
+id = "error"
+ask = "Did FL Studio show an error or message during the wait?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "error_text"
+ask = "What did it say?"
+type = "text"
+when = { error = "yes" }
+
+# ------------------------------------------------------------------ step 12
+
+[[steps]]
+id = "s12a"
+number = "12a"
+title = "Save a change"
+purpose = "Preparation for 'someone else's version arrives while the project is open'."
+text = """
+When you press Enter, the tool makes Song A.flp writable again and keeps a
+copy of it as it is now. Then, in FL Studio:
+ 1. If FL Studio shows an error from the previous step, close it.
+ 2. Move a knob and save ({mod}+S). If a Save as window appears, cancel it
+    and save again with {mod}+S."""
+before = [
+  { action = "clear_readonly", target = "project" },
+  { action = "backup_file", target = "project", slot = "before_change" },
+]
+after = [{ action = "compare_with_backup", slot = "before_change" }]
+
+[[steps.questions]]
+id = "saved"
+ask = "Did the save work without any message?"
+type = "yes_no"
+
+[[steps]]
+id = "s12b"
+number = "12b"
+title = "The file changes on disk while FL has it open"
+purpose = "'Get latest' while the DAW has the project open: does FL notice the new file, reload it, or ignore it? (SPEC 7.4)"
+text = """
+When you press Enter, the tool puts the older copy of Song A.flp (from
+before your change) back on disk, while FL Studio still has the project open.
+This is what happens when a teammate's version is downloaded.
+Then look at FL Studio for about 10 seconds and click into its window once.
+Does it notice? Show a message? Reload the project?"""
+before = [{ action = "restore_file", slot = "before_change", method = "replace" }]
+done_prompt = "After watching FL Studio for about 10 seconds, press Enter."
+
+[[steps.questions]]
+id = "noticed"
+ask = "Did FL Studio notice that the file changed (a message, a reload)?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "noticed_text"
+ask = "What exactly did it show or do?"
+type = "text"
+when = { noticed = "yes" }
+
+[[steps]]
+id = "s12c"
+number = "12c"
+title = "Save again after the file changed on disk"
+purpose = "Does FL's next save silently overwrite the version that arrived? If so, the app must refuse to update a project that is open."
+text = """
+In FL Studio move another knob and save ({mod}+S).
+The tool then checks whether FL Studio wrote over the older copy it put back."""
+after = [{ action = "compare_with_backup", slot = "before_change" }]
+
+[[steps.questions]]
+id = "warned"
+ask = "Did FL Studio warn that the file on disk had changed?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "warned_text"
+ask = "What did it say?"
+type = "text"
+when = { warned = "yes" }
+
+# ------------------------------------------------------------------ step 13
+
+[[steps]]
+id = "s13a"
+number = "13a"
+title = "Quit without saving"
+purpose = "Which files FL writes or deletes when it quits with unsaved changes."
+text = """
+ 1. In FL Studio move a knob (a change you do not save).
+ 2. Quit FL Studio normally.
+    Mac: FL Studio menu > Quit FL Studio, or Cmd+Q (check).
+    Windows: File > Exit.
+ 3. When it asks whether to save, choose No / Don't save (check)."""
+
+[[steps.questions]]
+id = "asked"
+ask = "What exactly did FL Studio ask when you quit, and which buttons did it offer?"
+type = "text"
+
+[[steps]]
+id = "s13b"
+number = "13b"
+title = "Start FL Studio again"
+purpose = "Does FL offer to recover the unsaved work, and from which file?"
+text = """
+Start FL Studio again and wait until it has fully started."""
+after = [{ action = "snapshot_tree" }]
+
+[[steps.questions]]
+id = "offered"
+ask = "Did FL Studio offer to recover or reopen anything?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "offered_text"
+ask = "What did it offer? If you can, try it and say what happened. (The trial may refuse to open files it saved.)"
+type = "text"
+when = { offered = "yes" }
+
+# ------------------------------------------------------------------ step 14
+
+[[steps]]
+id = "s14"
+number = "14"
+title = "Force-quit with unsaved changes"
+optional = true
+purpose = "What recovery files exist after a crash, and whether FL offers them on the next start."
+text = """
+This step is optional.
+ 1. Open the project Song A.flp again (trial: open the demo song copy).
+ 2. Move a knob (do not save).
+ 3. Press Enter here; the tool waits about a minute so autosave can run.
+ 4. Then force-quit FL Studio:
+    Mac: {opt}+Cmd+Esc, pick FL Studio, click Force Quit.
+    Windows: Ctrl+Shift+Esc to open Task Manager, pick FL Studio, End task.
+ 5. Start FL Studio again and wait until it has fully started."""
+before = [{ action = "wait", seconds = 75, message = "Waiting for an autosave before the force-quit." }]
+done_prompt = "When you have force-quit FL Studio and started it again, press Enter."
+after = [{ action = "snapshot_tree" }]
+
+[[steps.questions]]
+id = "offered"
+ask = "Did FL Studio offer to recover anything when it started again?"
+type = "yes_no"
+
+[[steps.questions]]
+id = "offered_text"
+ask = "What did it offer, and did recovering work?"
+type = "text"
+when = { offered = "yes" }
+
+# ------------------------------------------------------------------ step 15
+
+[[steps]]
+id = "s15"
+number = "15"
+title = "Wrap up"
+user_action = false
+purpose = "Anything the steps did not anticipate."
+text = """
+Almost done. You can now set FL Studio's Autosave back to what it was
+before ("{answer.s00.autosave}") in Options > File settings."""
+
+[[steps.questions]]
+id = "surprising"
+ask = "Was anything surprising, or did FL Studio do something the steps did not expect?"
+type = "text"
+
+[[steps.questions]]
+id = "menu_names"
+ask = "Were any menu names marked (check) different on your computer? Which ones, and what are they really called?"
+type = "text"
