@@ -15,6 +15,7 @@ Entries marked (planned) do not exist yet.
 - `docs/SPEC.md` — goals, architecture, data model, flows, MVP definition
 - `docs/ROADMAP.md` — long-term phases, exit criteria, risks
 - `docs/PLAN.md` — ordered tasks with tiers, dependencies, verification
+- `docs/NEXT_STEPS.md` — handoff: machine setup, current state, what to do next, known gaps
 - `docs/design/DESIGN_SYSTEM.md` — Blue Glass tokens, components, accessibility rules
 - `docs/design/mockups.html` — screen mockups the UI tasks implement
 - `docs/validation/` — results of Phase 0 experiments
