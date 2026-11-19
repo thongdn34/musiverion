@@ -1,0 +1,19 @@
+[package]
+name = "mv-app"
+description = "Musiverion: application service used by the desktop bridge, companion server and CLI"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+mv-core.workspace = true
+serde.workspace = true
+specta.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
+
+[lints]
+workspace = true

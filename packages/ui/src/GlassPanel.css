@@ -1,0 +1,26 @@
+/* Panel component, per docs/design/DESIGN_SYSTEM.md (Components: Panel). */
+.mv-glass-panel {
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight);
+  border-radius: var(--radius-m);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(140%);
+  backdrop-filter: blur(var(--blur)) saturate(140%);
+  color: var(--text);
+  padding: calc(var(--space) * 4);
+}
+
+/* Solid fallback when transparency is reduced or backdrop-filter is unsupported. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .mv-glass-panel {
+    background: #12244f;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .mv-glass-panel {
+    background: #12244f;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

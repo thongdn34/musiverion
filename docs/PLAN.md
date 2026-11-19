@@ -4,7 +4,7 @@ Phases and exit criteria: `ROADMAP.md`. Spec: `SPEC.md`. Tiers: Light, Medium, C
 
 ## Phase 0 — Foundations and validation
 
-**1. Scaffold** ☐ — Medium — deps: none
+**1. Scaffold** ☑ — Medium — deps: none
 Install the Rust toolchain if missing. Create the Cargo workspace with empty crates `mv-core`, `mv-git`, `mv-audio`, `mv-daw`, `mv-watch`, `mv-meta`, `mv-remote`, `mv-app`, `mv-cli` (each compiling, one smoke test), `apps/desktop` (Tauri v2 + React + TypeScript + Vite, one `ping` command through `mv-app` with `tauri-specta` bindings), `packages/ui` (empty shared package), pnpm workspace, `rustfmt`/`clippy -D warnings`, ESLint/Prettier, a `justfile`, dual license files, README, GitHub Actions CI (fmt, clippy, test, frontend lint/typecheck/build on macOS, Windows, Linux). Update `CLAUDE.md` commands and `filemap.md`.
 Verify: `just check` passes locally; `pnpm --filter desktop tauri build --debug` produces an app that shows the ping result.
 

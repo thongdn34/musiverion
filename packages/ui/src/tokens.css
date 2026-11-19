@@ -1,0 +1,28 @@
+/* Blue Glass design tokens. Source of truth: docs/design/DESIGN_SYSTEM.md (Tokens). */
+:root {
+  --bg-0: #050f26;
+  --bg-1: #0a2463;
+  --bg-2: #0e4ec4;
+  --orb-a: #3b82f6;
+  --orb-b: #22d3ee;
+  --glass-1: rgba(255, 255, 255, 0.07);
+  --glass-2: rgba(255, 255, 255, 0.13);
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  --blur: 24px;
+  --shadow: 0 12px 40px rgba(2, 8, 30, 0.45);
+  --text: #f3f7ff;
+  --text-2: rgba(222, 233, 255, 0.68);
+  --text-3: rgba(222, 233, 255, 0.45);
+  --primary: linear-gradient(135deg, #2f7bff, #56c2ff);
+  --primary-solid: #4c9bff;
+  --wave-a: #b9c8ee;
+  --diff: #ffb84d;
+  --ok: #4ade9a;
+  --danger: #ff7a90;
+  --radius-s: 8px;
+  --radius-m: 14px;
+  --radius-l: 20px;
+  /* 4px spacing grid: use multiples 4, 8, 12, 16, 24, 32. */
+  --space: 4px;
+}

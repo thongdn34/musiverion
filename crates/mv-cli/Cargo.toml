@@ -1,0 +1,20 @@
+[package]
+name = "mv-cli"
+description = "Musiverion: headless command-line tool over mv-app"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "mv-cli"
+path = "src/main.rs"
+
+[dependencies]
+clap.workspace = true
+mv-app.workspace = true
+serde_json.workspace = true
+
+[lints]
+workspace = true

@@ -5,11 +5,15 @@ Rust workspace (core engine) + Tauri v2 (desktop/mobile shell) + React/TypeScrip
 Read first: `docs/SPEC.md` (what and why), `docs/PLAN.md` (tasks), `docs/ROADMAP.md` (phases), `filemap.md` (where things live).
 
 ## Commands
-(filled in by the scaffold task; keep this list exact)
-- Check everything: `just check`
+- Install frontend deps: `pnpm install`
+- Check everything (what CI runs): `just check`
 - Rust tests: `cargo test --workspace`
-- Lint: `cargo fmt --check && cargo clippy --workspace --all-targets -- -D warnings`
-- Desktop dev: `pnpm --filter desktop tauri dev`
+- Lint: `cargo fmt --all --check && cargo clippy --workspace --all-targets -- -D warnings && pnpm lint && pnpm typecheck`
+- Format: `just fmt`
+- Desktop dev: `pnpm --filter desktop tauri dev` (also regenerates `apps/desktop/src/bindings.ts`)
+- Desktop debug bundle: `pnpm --filter desktop tauri build --debug`
+- CLI: `cargo run -p mv-cli -- ping --json`
+- Stale bindings: `UPDATE_BINDINGS=1 cargo test -p musiverion-desktop`
 
 ## Conventions
 - `mv-core` does no I/O: types, traits and policy functions only. Implementations live in the other crates.

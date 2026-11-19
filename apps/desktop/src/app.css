@@ -1,0 +1,50 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg-0);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+}
+
+/* Blue gradient backdrop with blurred orbs (docs/design/mockups.html). */
+.backdrop {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(420px 300px at 88% -10%, rgba(34, 211, 238, 0.34), transparent 65%),
+    radial-gradient(460px 360px at 4% 105%, rgba(59, 130, 246, 0.55), transparent 65%),
+    radial-gradient(300px 240px at 55% 45%, rgba(14, 78, 196, 0.5), transparent 70%),
+    linear-gradient(150deg, var(--bg-0), var(--bg-1) 60%, #0b3a94);
+}
+
+.ping {
+  min-width: 240px;
+}
+
+.ping p {
+  margin: 0;
+}
+
+.ping .label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: calc(var(--space) * 2);
+}
+
+.secondary {
+  color: var(--text-2);
+}
+
+.danger {
+  color: var(--danger);
+}
